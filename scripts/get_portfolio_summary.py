@@ -75,7 +75,7 @@ def get_portfolio_summary():
         for _, row in df.iterrows():
 
             transactions.append(
-                (datetime.strptime(row["date"], "%Y-%m-%d"), -row["total_amount"])
+                (datetime.fromisoformat(row["date"]), -row["total_amount"])
             )
 
         transactions.append((datetime.now(), total_current_value))

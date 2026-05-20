@@ -6,9 +6,9 @@ import pandas as pd
 from pathlib import Path
 
 
-def process_trade(trading_symbol, today_price, yesterday_price, base_price=1000):
+def process_trade(trading_symbol,today_date, yesterday_date ,today_price, yesterday_price, base_price=1000):
 
-    today_date = datetime.now().strftime("%Y-%m-%d")
+    # today_date = datetime.now().strftime("%Y-%m-%d")
     
     if today_price <= 0 or yesterday_price <= 0:
         print(f"Invalid price data for {trading_symbol}")

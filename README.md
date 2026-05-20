@@ -2,22 +2,30 @@
 
 A small Python script for tracking a simple ETF dip-buying strategy using Upstox market data.
 
-Right now this is a paper-trading tool. It fetches daily candle data, checks whether an ETF closed lower than the previous trading day, and records the calculated buy in a local CSV file. It does not place live Upstox orders.
+Right now this is a paper-trading tool. It fetches a recent daily candle, checks the latest LTP against that reference price, and records the calculated buy in a local CSV file. It does not place live Upstox orders.
 
 ## Strategy
 
 The script currently watches:
 
 - `SILVERBEES`
-- `GOLDBEES`
+- `GOLDETF`
 - `NIFTYBEES`
+- `NEXT50IETF`
+- `HNGSNGBEES`
+- `MID150BEES`
+- `MON100`
+- `MAFANG`
+- `MOM30IETF`
+- `HDFCSML250`
 
 For each ETF:
 
-1. Fetch the latest daily candle data from Upstox.
-2. Compare today's close with the previous close.
-3. If the ETF is flat or up, do nothing.
-4. If the ETF is down, calculate a paper buy:
+1. Fetch recent daily candle data from Upstox.
+2. Fetch the current LTP from Upstox.
+3. Compare the current LTP with the latest historical close.
+4. If the ETF is flat or up, do nothing.
+5. If the ETF is down, calculate a paper buy:
 
 ```text
 amount_to_invest = base_price * absolute_percentage_fall
@@ -33,6 +41,7 @@ main.py                         # Runs daily trading, then portfolio summary
 scripts/daily_trade.py          # ETF loop and strategy orchestration
 scripts/get_portfolio_summary.py # Portfolio summary helper
 utils/get_data.py               # Upstox historical candle fetch
+                                # and LTP fetch
 utils/instrument_keys.py        # Finds instrument keys from NSE.json
 utils/process_trades.py         # Calculates and stores paper trades
 utils/allowed_to_trade.py       # Prevents duplicate same-day entries
@@ -52,7 +61,6 @@ Create a `.env` file in the project root:
 
 ```env
 ACCESS_TOKEN=your_upstox_access_token
-BASE_URL=https://api.upstox.com/v2
 ```
 
 The token comes from your Upstox developer app login flow. Access tokens expire, so expect to refresh it as needed.
@@ -70,7 +78,20 @@ uv run python main.py
 1. Runs `daily_trade()` to check the ETF strategy and save any new paper trades.
 2. Runs `get_portfolio_summary()` to print and append the latest portfolio summary.
 
-Paper trades are written under the configured `portfolio` directory, one CSV per ETF.
+Paper trades are written under the configured `portfolio` directory, one CSV per ETF. Portfolio snapshots are appended to `portfolio/summary.csv`.
+
+## Portfolio Summary
+
+The summary script reads the paper-trade CSVs and prints:
+
+- total shares
+- average buy price
+- current price
+- total investment
+- current value
+- P&L
+- P&L percentage
+- XIRR
 
 ## Trade Guard
 

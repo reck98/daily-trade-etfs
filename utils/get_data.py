@@ -1,66 +1,84 @@
-from config.config import ACCESS_TOKEN, BASE_URL, EXTRA_LINES
+from config.config import ACCESS_TOKEN
 import requests
-from datetime import datetime, timedelta
 from urllib.parse import quote
+from datetime import datetime, timedelta
+
+BASE_URL = "https://api.upstox.com"
+
 
 headers = {"Authorization": f"Bearer {ACCESS_TOKEN}", "Accept": "application/json"}
 
+
 today_date = datetime.now().strftime("%Y-%m-%d")
 
-from_date = (datetime.now() - timedelta(days=10)).strftime("%Y-%m-%d")
+from_date = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
 
 
-def get_data(instrument_key, symbol) -> dict:
+def get_data(instrument_key, symbol):
 
     result = {}
 
     encoded_key = quote(instrument_key)
-    url = (
-        f"{BASE_URL}/historical-candle/"
+
+    # =====================================
+    # HISTORICAL API
+    # =====================================
+
+    historical_url = (
+        f"{BASE_URL}/v3/historical-candle/"
         f"{encoded_key}/days/1/"
         f"{today_date}/{from_date}"
     )
-    
-    # print(url)
 
-    response = requests.get(url, headers=headers)
+    historical_response = requests.get(historical_url, headers=headers)
 
-    if response.status_code == 200:
+    if historical_response.status_code != 200:
 
-        data = response.json()
+        print(f"Historical API failed for {symbol}")
 
-        candles = data["data"]["candles"]
+        return result
 
-        if len(candles) < 2:
+    historical_data = historical_response.json()
 
-            print(f"Not enough candle data for {symbol}")
-            return result
+    candles = historical_data["data"]["candles"]
 
-        today_candle = candles[0]
+    if len(candles) < 1:
 
-        yesterday_candle = candles[1]
-        
-        if today_candle[0] != today_date or yesterday_candle[0] != (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"):
-            print(f"Invalid candle data for {symbol}")
-            return result
+        print(f"No candle data for {symbol}")
 
-        result[symbol] = {
-            "today_date": today_candle[0],
-            "today_price": today_candle[4],
-            "yesterday_date": yesterday_candle[0],
-            "yesterday_price": yesterday_candle[4],
-        }
-        
-        # print(EXTRA_LINES)
-        # print(result[symbol])
-        # print(EXTRA_LINES)
+        return result
 
-    else:
+    latest_candle = candles[0]
 
-        print(f"Error fetching {symbol}")
+    yesterday_date = latest_candle[0]
 
-        print(response.status_code)
+    yesterday_price = latest_candle[4]
 
-        print(response.text)
+    # =====================================
+    # LTP API
+    # =====================================
+
+    ltp_url = f"{BASE_URL}/v3/market-quote/ltp" f"?instrument_key={encoded_key}"
+
+    ltp_response = requests.get(ltp_url, headers=headers)
+
+    if ltp_response.status_code != 200:
+
+        print(f"LTP API failed for {symbol}")
+
+        return result
+
+    ltp_data = ltp_response.json()
+
+    market_data = next(iter(ltp_data["data"].values()))
+
+    today_price = market_data["last_price"]
+
+    result[symbol] = {
+        "today_date": datetime.now().strftime("%Y-%m-%d"),
+        "today_price": today_price,
+        "yesterday_date": yesterday_date,
+        "yesterday_price": yesterday_price,
+    }
 
     return result

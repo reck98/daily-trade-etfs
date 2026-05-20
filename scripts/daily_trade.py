@@ -6,14 +6,14 @@ from utils.allowed_to_trade import allowed_to_trade
 
 ETFS_LIST = [
     "SILVERBEES",
-    "GOLDBEES",
+    "GOLDETF",
     "NIFTYBEES",
     "NEXT50IETF",
     "HNGSNGBEES",
     "MID150BEES",
     "MON100",
     "MAFANG",
-    "MOMOMENTUM",
+    "MOM30IETF",
     "HDFCSML250",
 ]
 
@@ -22,7 +22,7 @@ def daily_trade():
 
     instrument_keys = get_instrument_keys(ETFS_LIST=ETFS_LIST)
 
-    print(instrument_keys)
+    # print(instrument_keys)s
 
     for symbol, key in instrument_keys.items():
         data = get_data(key, symbol)
@@ -30,7 +30,11 @@ def daily_trade():
         if data:
             if allowed_to_trade(symbol, data[symbol]["today_date"]):
                 process_trade(
-                    symbol, data[symbol]["today_price"], data[symbol]["yesterday_price"]
+                    symbol,
+                    data[symbol]["today_date"],
+                    data[symbol]["yesterday_date"],
+                    data[symbol]["today_price"],
+                    data[symbol]["yesterday_price"],
                 )
             else:
                 print(EXTRA_LINES)
