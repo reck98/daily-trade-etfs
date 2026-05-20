@@ -1,10 +1,10 @@
 import json
 from public.extract import OUTPUT_PATH
 
-ETFS_LIST = ["SILVERBEES", "GOLDBEES", "NIFTYBEES"]
+DEFAULT_ETFS_LIST = ["NIFTYBEES", "GOLDBEES"]
 
 
-def get_instrument_keys(ETFS_LIST=ETFS_LIST):
+def get_instrument_keys(ETFS_LIST=DEFAULT_ETFS_LIST) -> dict:
 
     INSTRUMENT_KEYS = {}
 

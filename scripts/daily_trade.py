@@ -1,44 +1,26 @@
-import requests
-from datetime import datetime, timedelta
-from config.config import ACCESS_TOKEN, BASE_URL
+from utils.process_trades import process_trade
+from utils.instrument_keys import get_instrument_keys
+from utils.get_data import get_data
+from config.config import EXTRA_LINES
+from utils.allowed_to_trade import allowed_to_trade
 
-to_date = datetime.today().strftime("%Y-%m-%d")
-from_date = (datetime.today() - timedelta(days=5)).strftime("%Y-%m-%d")
-
-headers = {"Accept": "application/json", "Authorization": f"Bearer {ACCESS_TOKEN}"}
-
-
-# url = (
-#     f"{BASE_URL}/historical-candle/"
-#     f"{INSTRUMENT_KEY}/days/1/"
-#     f"{to_date}/{from_date}"
-# )
+ETFS_LIST = ["SILVERBEES", "GOLDBEES", "NIFTYBEES"]
 
 
-def get_candles_data(INSTRUMENT_KEYS, to_date=to_date, from_date=from_date):
+def daily_trade():
 
-    candles_data = {}
+    instrument_keys = get_instrument_keys(ETFS_LIST=ETFS_LIST)
 
-    for instrument_key in INSTRUMENT_KEYS.values():
+    for symbol, key in instrument_keys.items():
+        data = get_data(key, symbol)
 
-        url = (
-            f"{BASE_URL}/historical-candle/"
-            f"{instrument_key}/days/1/"
-            f"{to_date}/{from_date}"
-        )
-
-        response = requests.get(url, headers=headers)
-
-        candles_data[instrument_key] = response.json()
-
-    return candles_data
-
-
-def make_trades(candles_data):
-
-    trades = {}
-
-    for candle_data in candles_data:
-
-        print(candle_data)
-        break
+        if data:
+            if allowed_to_trade(symbol, data[symbol]["today_date"]):
+                process_trade(
+                    symbol, data[symbol]["today_price"], data[symbol]["yesterday_price"]
+                )
+            else:
+                print(EXTRA_LINES)
+                print(f"Alredy traded for {symbol} today")
+                print(EXTRA_LINES)
+    return
