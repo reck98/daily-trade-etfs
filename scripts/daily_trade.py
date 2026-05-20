@@ -4,12 +4,25 @@ from utils.get_data import get_data
 from config.config import EXTRA_LINES
 from utils.allowed_to_trade import allowed_to_trade
 
-ETFS_LIST = ["SILVERBEES", "GOLDBEES", "NIFTYBEES"]
+ETFS_LIST = [
+    "SILVERBEES",
+    "GOLDBEES",
+    "NIFTYBEES",
+    "NEXT50IETF",
+    "HNGSNGBEES",
+    "MID150BEES",
+    "MON100",
+    "MAFANG",
+    "MOMOMENTUM",
+    "HDFCSML250",
+]
 
 
 def daily_trade():
 
     instrument_keys = get_instrument_keys(ETFS_LIST=ETFS_LIST)
+
+    print(instrument_keys)
 
     for symbol, key in instrument_keys.items():
         data = get_data(key, symbol)
