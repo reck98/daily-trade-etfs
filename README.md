@@ -29,7 +29,7 @@ The default `base_price` is `1000`, so a 1.5% fall means roughly `1500` worth of
 ## Project Layout
 
 ```text
-main.py                         # Runs the daily trade flow
+main.py                         # Runs daily trading, then portfolio summary
 scripts/daily_trade.py          # ETF loop and strategy orchestration
 scripts/get_portfolio_summary.py # Portfolio summary helper
 utils/get_data.py               # Upstox historical candle fetch
@@ -59,17 +59,16 @@ The token comes from your Upstox developer app login flow. Access tokens expire,
 
 ## Run
 
-Run the daily strategy:
+Run the daily workflow:
 
 ```bash
 uv run python main.py
 ```
 
-Generate a portfolio summary:
+`main.py` does two things in order:
 
-```bash
-uv run python -c "from scripts.get_portfolio_summary import get_portfolio_summary; get_portfolio_summary()"
-```
+1. Runs `daily_trade()` to check the ETF strategy and save any new paper trades.
+2. Runs `get_portfolio_summary()` to print and append the latest portfolio summary.
 
 Paper trades are written under the configured `portfolio` directory, one CSV per ETF.
 
