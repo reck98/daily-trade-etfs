@@ -77,4 +77,4 @@ def process_trade(trading_symbol,today_date, yesterday_date ,today_price, yester
 
     print(EXTRA_LINES)
 
-    return
+    return total_amount

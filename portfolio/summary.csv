@@ -9,3 +9,50 @@ MON100,1,327.09,327.09,327.09,327.09,0.0,0.0,0.0
 MAFANG,3,193.95,193.95,581.85,581.85,0.0,0.0,0.0
 
 
+
+================================================================================
+SUMMARY_TAKEN_DATE,2026-05-21 22:43:45
+instrument,total_shares,avg_buy_price,current_price,total_investment,current_value,pnl,pnl_pct,xirr
+SILVERBEES,3,252.2,251.97,756.6,755.91,-0.69,-0.09,0.0
+GOLDETF,2,152.91,153.51,305.82,307.02,1.2,0.39,317.62
+HNGSNGBEES,5,535.96,532.9,2679.8,2664.5,-15.3,-0.57,0.0
+MON100,3,326.19,325.74,978.57,977.22,-1.35,-0.14,0.0
+MAFANG,7,193.18,192.61,1352.29,1348.27,-4.02,-0.3,0.0
+
+
+
+====================================================================================================
+SUMMARY_TAKEN_DATE,2026-05-21 22:51:13
+instrument,total_shares,avg_buy_price,current_price,invested_today,total_investment,current_value,pnl,pnl_pct,xirr
+SILVERBEES,3,252.2,251.97,503.94,756.6,755.91,-0.69,-0.09,10.01
+GOLDETF,2,152.91,153.51,0.0,305.82,307.02,1.2,0.39,317.62
+HNGSNGBEES,5,535.96,532.9,1065.8,2679.8,2664.5,-15.3,-0.57,10.01
+MON100,3,326.19,325.74,651.48,978.57,977.22,-1.35,-0.14,10.01
+MAFANG,7,193.18,192.61,770.44,1352.29,1348.27,-4.02,-0.3,10.01
+
+TOTAL_INVESTED_TODAY,2991.66
+TOTAL_INVESTMENT,6073.08
+CURRENT_PORTFOLIO_VALUE,6052.92
+TOTAL_PNL,-20.16
+TOTAL_PNL_PERCENT,-0.33
+PORTFOLIO_XIRR,10.01
+
+
+
+====================================================================================================
+SUMMARY_TAKEN_DATE,2026-05-21 22:56:47
+instrument,total_shares,avg_buy_price,current_price,invested_today,total_investment,current_value,pnl,pnl_pct,xirr
+SILVERBEES,3,252.2,251.97,503.94,756.6,755.91,-0.69,-0.09,-63.14
+GOLDETF,2,152.91,153.51,0.0,305.82,307.02,1.2,0.39,317.62
+HNGSNGBEES,5,535.96,532.9,1065.8,2679.8,2664.5,-15.3,-0.57,-96.91
+MON100,3,326.19,325.74,651.48,978.57,977.22,-1.35,-0.14,-77.9
+MAFANG,7,193.18,192.61,770.44,1352.29,1348.27,-4.02,-0.3,-92.04
+
+TOTAL_INVESTED_TODAY,2991.66
+TOTAL_INVESTMENT,6073.08
+CURRENT_PORTFOLIO_VALUE,6052.92
+TOTAL_PNL,-20.16
+TOTAL_PNL_PERCENT,-0.33
+PORTFOLIO_XIRR,-90.89
+
+

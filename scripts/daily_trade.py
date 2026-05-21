@@ -23,21 +23,29 @@ def daily_trade():
     instrument_keys = get_instrument_keys(ETFS_LIST=ETFS_LIST)
 
     # print(instrument_keys)s
+    total_amount_invested = 0
 
     for symbol, key in instrument_keys.items():
         data = get_data(key, symbol)
 
         if data:
             if allowed_to_trade(symbol, data[symbol]["today_date"]):
-                process_trade(
+                amount = process_trade(
                     symbol,
                     data[symbol]["today_date"],
                     data[symbol]["yesterday_date"],
                     data[symbol]["today_price"],
                     data[symbol]["yesterday_price"],
                 )
+
+                if amount:
+                    total_amount_invested += amount
             else:
                 print(EXTRA_LINES)
-                print(f"Alredy traded for {symbol} today")
+                print(f"Already traded for {symbol} today")
                 print(EXTRA_LINES)
+
+    print(EXTRA_LINES)
+    print(f"Total amount invested Today: {total_amount_invested}")
+    print(EXTRA_LINES)
     return
