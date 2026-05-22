@@ -40,6 +40,7 @@ def daily_trade():
 
                 if amount:
                     total_amount_invested += amount
+                
             else:
                 print(EXTRA_LINES)
                 print(f"Already traded for {symbol} today")
@@ -48,4 +49,5 @@ def daily_trade():
     print(EXTRA_LINES)
     print(f"Total amount invested Today: {total_amount_invested}")
     print(EXTRA_LINES)
+    
     return

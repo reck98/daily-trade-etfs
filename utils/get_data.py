@@ -20,10 +20,7 @@ def get_data(instrument_key, symbol):
 
     encoded_key = quote(instrument_key)
 
-    # =====================================
-    # HISTORICAL API
-    # =====================================
-
+   
     historical_url = (
         f"{BASE_URL}/v3/historical-candle/"
         f"{encoded_key}/days/1/"
@@ -53,10 +50,6 @@ def get_data(instrument_key, symbol):
     yesterday_date = latest_candle[0]
 
     yesterday_price = latest_candle[4]
-
-    # =====================================
-    # LTP API
-    # =====================================
 
     ltp_url = f"{BASE_URL}/v3/market-quote/ltp" f"?instrument_key={encoded_key}"
 
