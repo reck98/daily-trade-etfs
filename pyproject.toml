@@ -6,8 +6,12 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "dotenv>=0.9.9",
+    "google-genai>=2.6.0",
     "pandas>=3.0.3",
+    "pandas-market-calendars>=5.4.0",
+    "pydantic>=2.13.4",
     "pyxirr>=0.10.8",
     "requests>=2.34.2",
+    "rich>=15.0.0",
     "scipy>=1.17.1",
 ]

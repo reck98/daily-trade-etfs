@@ -5,6 +5,7 @@ from datetime import datetime
 import pyxirr
 from utils.get_data import get_data
 from utils.instrument_keys import get_instrument_keys
+from rich import print
 
 
 def calculate_xirr(transactions):

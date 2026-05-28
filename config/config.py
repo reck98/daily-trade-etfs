@@ -11,3 +11,6 @@ PORTFOLIO_DIR = FilePath(r"E:\Development\PlayGround\daily-trade-upstox\portfoli
 
 EXTRA_LINES = "\n====================================================================================\n"
 
+GEMINI_API_KEY = str(os.getenv("GEMINI_API_KEY"))
+# GEMINI_API_SECRET = str(os.getenv("GEMINI_API_SECRET"))
+
