@@ -3,13 +3,14 @@ from scripts.get_portfolio_summary import get_portfolio_summary
 from config.config import EXTRA_LINES
 from utils.market_open import is_open
 from rich import print
+from datetime import datetime
 
 
 def main():
 
     if not is_open():
         print(EXTRA_LINES)
-        print("Market is closed")
+        print(f"Market is closed today {datetime.today().strftime('%Y-%m-%d')}\n")
         print(EXTRA_LINES)
         return
 
