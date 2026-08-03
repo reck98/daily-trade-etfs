@@ -4,6 +4,7 @@ from config.config import EXTRA_LINES
 from utils.market_open import is_open
 from rich import print
 from datetime import datetime
+from scripts.git_commit import git_commit
 
 
 def main():
@@ -21,6 +22,14 @@ def main():
     print(EXTRA_LINES)
     print(f"Executing get_portfolio_summary.py\n")
     get_portfolio_summary()
+    
+    
+    print(EXTRA_LINES)
+    print("Executing git commit")
+    git_commit()
+    
+    print("\nDone !")
+
 
 
 if __name__ == "__main__":
