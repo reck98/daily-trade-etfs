@@ -28,7 +28,7 @@ def main():
     print("Executing git commit")
     git_commit()
     
-    print("\nDone !")
+    # print("\nDone !")
 
 
 
