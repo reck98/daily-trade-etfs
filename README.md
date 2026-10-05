@@ -37,14 +37,15 @@ The default `base_price` is `1000`, so a 1.5% fall means roughly `1500` worth of
 ## Project Layout
 
 ```text
-main.py                         # Runs daily trading, then portfolio summary
-scripts/daily_trade.py          # ETF loop and strategy orchestration
-scripts/get_portfolio_summary.py # Portfolio summary helper
-utils/get_data.py               # Upstox historical candle fetch
-                                # and LTP fetch
-utils/instrument_keys.py        # Finds instrument keys from NSE.json
+main.py                         # Single entry point orchestrating the workflow
+scripts/daily_trade.py          # ETF loop, strategy execution & waitlist retries
+scripts/get_portfolio_summary.py # Portfolio metrics, PnL & XIRR calculation
+scripts/git_commit.py           # Auto-commits and pushes trades/summaries to Git
+utils/get_data.py               # Upstox candle and LTP fetch with session pooling
+utils/instrument_keys.py        # Extracts instrument keys from NSE.json
 utils/process_trades.py         # Calculates and stores paper trades
 utils/allowed_to_trade.py       # Prevents duplicate same-day entries
+utils/market_open.py            # Validates if NSE market is open today
 config/config.py                # Environment and local path config
 public/NSE.json                 # Upstox instrument dump
 ```
@@ -73,12 +74,27 @@ Run the daily workflow:
 uv run python main.py
 ```
 
-`main.py` does two things in order:
+`main.py` is the single entry point and executes the following sequential steps:
 
-1. Runs `daily_trade()` to check the ETF strategy and save any new paper trades.
-2. Runs `get_portfolio_summary()` to print and append the latest portfolio summary.
+1. **Market Schedule Check**: Checks whether the NSE market is open today (`utils/market_open.py`); exits early if closed.
+2. **Daily Trades**: Evaluates the ETF strategy for each instrument and saves any new paper trades (`scripts/daily_trade.py`).
+3. **Portfolio Summary**: Computes and appends the latest portfolio summary, PnL, and XIRR (`scripts/get_portfolio_summary.py`).
+4. **Git Sync**: Automatically stages, commits, and pushes updated portfolio CSVs and summary logs to GitHub (`scripts/git_commit.py`).
 
 Paper trades are written under the configured `portfolio` directory, one CSV per ETF. Portfolio snapshots are appended to `portfolio/summary.csv`.
+
+## Resilience & Timeout Waitlist Strategy
+
+To prevent transient network glitches or Upstox connection timeouts (`[WinError 10060]`) from halting the pipeline:
+
+- **HTTP Session Connection Pooling**: Reuses TCP/TLS connections via `requests.Session()` and `HTTPAdapter(pool_connections=10, pool_maxsize=10)` with explicit connect and read timeouts (10s connect, 20s read).
+- **Primary Pass Deferral**: If an ETF encounters a connection timeout during the primary evaluation, it is placed on a **waitlist** while the script seamlessly continues evaluating the remaining ETFs.
+- **Waitlist Retry with Backoff**: Once the primary loop completes, waitlisted ETFs are retried using a dedicated 3-attempt backoff schedule:
+  - **Attempt 1**: Immediate retry
+  - **Attempt 2**: Wait 10 seconds, then retry
+  - **Attempt 3**: Wait 30 seconds, then retry
+  - If unreachable after 3 attempts, the failure details are logged and the script moves to the next ETF.
+- **Uninterrupted Downstream Execution**: After the waitlist pass finishes, execution naturally proceeds to generate the portfolio summary and push the git commit.
 
 ## Portfolio Summary
 
@@ -87,6 +103,7 @@ The summary script reads the paper-trade CSVs and prints:
 - total shares
 - average buy price
 - current price
+- invested today
 - total investment
 - current value
 - P&L
