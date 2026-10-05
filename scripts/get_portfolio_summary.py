@@ -63,7 +63,11 @@ def get_portfolio_summary():
 
         avg_buy_price = round(total_amount / total_shares, 2)
 
-        market_data = get_data(instrument_keys[symbol], symbol)
+        try:
+            market_data = get_data(instrument_keys[symbol], symbol)
+        except Exception as exc:
+            print(f"[bold yellow]Could not fetch market data for {symbol} in portfolio summary: {exc}[/bold yellow]")
+            continue
 
         if symbol not in market_data:
 
